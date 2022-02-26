@@ -1,6 +1,9 @@
 package telran.multithreading.threadsrace;
 
 public class ThreadsRace extends Thread {
+	/* V.R. 
+	 * The name 'symbol' isn't suitable. 'racerId' looks much better
+	 */
 	private int symbol;
 	private int nRuns;
 	private int sleepingTime;

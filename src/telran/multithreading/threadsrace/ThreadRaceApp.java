@@ -41,6 +41,9 @@ public class ThreadRaceApp {
 		List<ThreadsRace> list = new ArrayList<ThreadsRace>();
 		for(int i = 0; i < numOfThreads; i++) {
 			int sleepingTime = (int) ((Math.random() * (max - min)) + min);
+			/* V.R. It seems to me that racerId begins from 1. However it is a matter
+			 * of taste.
+			 */
 			list.add(new ThreadsRace(i, distance, sleepingTime));
 		}
 		return list;
