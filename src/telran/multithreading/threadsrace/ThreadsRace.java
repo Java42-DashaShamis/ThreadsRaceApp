@@ -1,33 +1,32 @@
 package telran.multithreading.threadsrace;
 
-public class ThreadsRace extends Thread {
-	private int symbol;
-	private int nRuns;
-	private int sleepingTime;
-	
-	public static int winner = -1;
-	
-	
-	public ThreadsRace(int symbol, int nRuns, int sleepingTime) {
-		this.symbol = symbol;
-		this.nRuns = nRuns;
-		this.sleepingTime = sleepingTime;
+
+public class ThreadsRace {
+	private int distance;
+	private int minSleep;
+	private int maxSleep;
+	private int winner = -1;
+	public ThreadsRace(int distance, int minSleep, int maxSleep) {
+		this.distance = distance;
+		this.minSleep = minSleep;
+		this.maxSleep = maxSleep;
 	}
-
-
-	@Override
-	public void run() {
-		for(int i = 0; i < nRuns; i++) {
-			try {
-				sleep(sleepingTime);
-			} catch (InterruptedException e) {
-				
-			}
-			System.out.println(symbol);
-		}
-		if(winner == -1) {
-			winner = symbol;
+	public int getWinner() {
+		return winner;
+	}
+	public void setWinner(int winner) {
+		if (this.winner == -1) {
+			this.winner = winner;
 		}
 	}
-
+	public int getDistance() {
+		return distance;
+	}
+	public int getMinSleep() {
+		return minSleep;
+	}
+	public int getMaxSleep() {
+		return maxSleep;
+	}
+	
 }
