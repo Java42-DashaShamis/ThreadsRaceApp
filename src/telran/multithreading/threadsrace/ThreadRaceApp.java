@@ -1,5 +1,10 @@
 package telran.multithreading.threadsrace;
 
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Timer;
+import java.util.concurrent.CountDownLatch;
 import java.util.stream.IntStream;
 
 import telran.view.*;
@@ -11,6 +16,8 @@ public class ThreadRaceApp {
 	private static final int MAX_DISTANCE = 1000;
 	private static final int MIN_SLEEP = 2;
 	private static final int MAX_SLEEP = 5;
+	static CountDownLatch latch = new CountDownLatch(1);
+	
 	public static void main(String[] args) {
 		InputOutput io = new ConsoleInputOutput();
 		Item[] items = getItems();
@@ -31,14 +38,25 @@ public class ThreadRaceApp {
 		int distance = io.readInt("Enter distance", MIN_DISTANCE, MAX_DISTANCE);
 		ThreadsRace race = new ThreadsRace(distance, MIN_SLEEP, MAX_SLEEP);
 		Runner[] runners = new Runner[nThreads];
-		startRunners(runners, race);
+		startRunners(runners, race, nThreads);
+		latch.countDown();
 		joinRunners(runners);
-		displayWinner(race);
+		displayResults(runners);
 	}
 
-	private static void displayWinner(ThreadsRace race) {
-		System.out.println("Congratulations to runner " + race.getWinner());
-		
+	private static void displayResults(Runner[] runners) {
+		System.out.println("Results of the game\n" + 
+	"place" + " ".repeat(5) + "racer number" + " ".repeat(5) + "time");
+		ArrayList<Runner>list = getList(runners);
+		for(int i = 0; i < list.size(); i++) {
+			System.out.println((i+1) + " ".repeat(14) + list.get(i).runnerId + " ".repeat(12) + list.get(i).time);
+		}
+	}
+
+	private static ArrayList<Runner> getList(Runner[] runners) {
+		ArrayList<Runner>list = new ArrayList<Runner>(Arrays.asList(runners));
+		list.sort((r1,r2) -> r1.time - r2.time);
+		return list;
 	}
 
 	private static void joinRunners(Runner[] runners) {
@@ -52,9 +70,9 @@ public class ThreadRaceApp {
 		
 	}
 
-	private static void startRunners(Runner[] runners, ThreadsRace race) {
+	private static void startRunners(Runner[] runners, ThreadsRace race, int nThreads) {
 		IntStream.range(0, runners.length).forEach(i -> {
-			runners[i] = new Runner(race, i + 1);
+			runners[i] = new Runner(race, i + 1, latch);
 			runners[i].start();
 		});
 		
