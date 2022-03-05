@@ -22,6 +22,10 @@ public class Runner extends Thread {
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
+		/* V.R. Using CountDownLatch mechanism will not set the same 
+		 * start time for all of threads. 
+		 * Only main is able to provide the same start time for all
+		 */
 		Instant start = Instant.now();
 		int sleepRange = race.getMaxSleep() - race.getMinSleep() + 1;
 		int minSleep = race.getMinSleep();
@@ -32,8 +36,13 @@ public class Runner extends Thread {
 			} catch (InterruptedException e) {
 				throw new IllegalStateException();
 			}
+			/* V.R.
+			 * This printing has to be out of the cycle.
+			 */
 			printingID(runnerId);
 		}
+		// V.R. It is the good place for critical section here. Time calculation
+		// isn't atomic operation
 		time = (int) ChronoUnit.MILLIS.between(start,Instant.now());
 	}
 	private static void printingID(int runnerId) {

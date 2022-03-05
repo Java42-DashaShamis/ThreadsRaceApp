@@ -34,6 +34,10 @@ public class ThreadRaceApp {
 		return res;
 	}
 	static void startGame(InputOutput io) {
+		/* V.R.
+		 * This input doesn't explain the range of values. For example,
+		 * the range for distance is from MIN_DISTANCE to MAX_DISTANCE
+		 */
 		int nThreads = io.readInt("Enter number of the runners", 2, MAX_THREADS);
 		int distance = io.readInt("Enter distance", MIN_DISTANCE, MAX_DISTANCE);
 		ThreadsRace race = new ThreadsRace(distance, MIN_SLEEP, MAX_SLEEP);
@@ -47,6 +51,12 @@ public class ThreadRaceApp {
 	private static void displayResults(Runner[] runners) {
 		System.out.println("Results of the game\n" + 
 	"place" + " ".repeat(5) + "racer number" + " ".repeat(5) + "time");
+		/* V.R. This implementation isn't effective. 
+		 *  The list of runners is created using mutex mechanism. After the
+		 *  creation this list is sorted.
+		 *  The alternative idea is to add the runner after it's finish in the
+		 *  natural order and dont't sort it at all.
+		 */
 		ArrayList<Runner>list = getList(runners);
 		for(int i = 0; i < list.size(); i++) {
 			System.out.println((i+1) + " ".repeat(14) + list.get(i).runnerId + " ".repeat(12) + list.get(i).time);
